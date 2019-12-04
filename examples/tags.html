@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Calendarify: displaying tags</title>   
+    <!-- Calendarify -->
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <link href="../calendarify.css" rel="stylesheet">
+    <script src="../calendarify.js"></script>
+    <!-- End of Calendarify -->
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        calendarify('#tbc', {
+          tags: [
+            { color: 'blue', label: 'Christmas', dates: [
+                '25/12/2019'
+              ] },
+            { color: 'green', label: 'Bank Holidays', dates: [
+                '25/12/2019',
+                '26/12/2019',
+                '01/01/2020'
+              ] }
+          ]
+        }) 
+      })
+    </script>
+  </head>
+  <body>
+    <input id="tbc" placeholder="Enter a date"></input>
+  </body>
+</html>

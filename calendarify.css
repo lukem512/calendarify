@@ -1,0 +1,239 @@
+/* 
+ * Calendarify
+ * Client-side calendar library designed to replace the 
+ * <input type="date"> tag, which is lacking.
+ * Luke Mitchell, Dec. 2019
+ */
+
+:root {
+  --calendarify-color-primary: #ed5656;
+  --calendarify-color-light: white;
+  --calendarify-color-dark: black;
+  --calendarify-color-neutral: lightgrey;
+  --calendarify-color-danger: red;
+  --calendarify-color-background: #f7f7f7;
+  
+  --calendarify-font-family: arial, sans-serif;
+  --calendarify-box-shadow: 0.2rem 0.2rem 0 0 var(--calendarify-color-neutral);
+}
+
+.calendarify {
+  font-family: var(--calendarify-font-family);
+}
+
+.calendarify.input-group input.invalid {
+  color: var(--calendarify-color-danger);
+}
+
+.calendarify.input-group {
+  position: relative;
+  width: fit-content;
+}
+
+.calendarify.input-group input {
+  width: 100%;
+}
+
+.calendarify.input-group .input-icon {
+  position: absolute;
+  height: 1rem;
+  font-size: 0.8rem;
+  right: 0.5rem;
+  bottom: calc(50% - 0.4rem);
+  z-index: 5;
+}
+
+.calendarify.input-group .input-icon a {
+  color: var(--calendarify-color-dark);
+  text-decoration: none;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.calendarify.input-group .input-icon a:hover {
+  color: var(--calendarify-color-primary);
+}
+
+.calendarify-popout {
+  background-color: var(--calendarify-color-background);
+  margin-left: 1rem;
+  position: absolute;
+  box-shadow: var(--calendarify-box-shadow);
+  z-index: 999;
+  
+  /* position to be populated by JavaScript */
+}
+
+.calendarify-popout .top {
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  justify-content: space-between;
+  
+  background-color: var(--calendarify-color-primary);
+  width: 100;
+  
+  box-sizing: border-box;
+  
+  font-weight: bold;
+}
+
+.calendarify-popout .top .month-container,
+.calendarify-popout .top .year-container      {
+  display: flex;
+  align-items: center;
+}
+
+.calendarify-popout .top .month-container a,
+.calendarify-popout .top .year-container a {
+  color: var(--calendarify-color-dark);
+  text-decoration: none;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.calendarify-popout .top .month-container div {
+  margin-left: 0.5rem;
+}
+
+.calendarify-popout .top .year-container div {
+  margin-right: 0.5rem;
+}
+
+.calendarify-popout .top .month-container a,
+.calendarify-popout .top .year-container a {
+  font-size: 0.7rem;
+}
+
+.calendarify-popout .top .month-container a:hover,
+.calendarify-popout .top .year-container a:hover {
+  color: var(--calendarify-color-light);
+}
+
+.calendarify-popout .top .month {
+  text-transform: uppercase;
+}
+
+.calendarify-popout .top .year {
+  color: var(--calendarify-color-light);
+}
+
+.calendarify-popout .headings {
+  justify-content: space-evenly;
+}
+
+.calendarify-popout .heading {
+  padding: 0.25rem 0.5rem;
+}
+
+.calendarify-popout .day {
+  padding: 0.5rem;
+  cursor: pointer;
+
+  width: 100%;
+  min-height: 2rem;
+  
+  box-sizing: border-box;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  font-weight: bold;
+  font-size: 0.9rem;
+  
+  position: relative;
+  
+  transition: color 0.2s ease-in-out;
+}
+
+.calendarify-popout .day:not(.selected):hover {
+  background-color: var(--calendarify-color-primary);
+}
+
+.calendarify-popout .day.today {
+  color: var(--calendarify-color-primary);
+}
+
+.calendarify-popout .day.selected {
+  border: 2px solid var(--calendarify-color-primary);
+  padding: calc(0.5rem - 2px);
+}
+
+.calendarify-popout .day.selected:hover {
+  color: var(--calendarify-color-dark);
+}
+
+.calendarify-popout .day.last-month,
+.calendarify-popout .day.next-month {
+  color: var(--calendarify-color-neutral);
+}
+
+.calendarify-popout .day.last-month .tag,
+.calendarify-popout .day.next-month .tag {
+  opacity: 50%;
+}
+
+.calendarify-popout .day .tag {
+  position: absolute;
+  right: 0.25rem;
+}
+
+.calendarify-popout .day .tag,
+.calendarify-popout .legend-item .legend-tag {
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: 2px;
+}
+
+.calendarify-popout .day .tag:nth-of-type(1) {
+  top: 0.65rem;
+}
+
+.calendarify-popout .day .tag:nth-of-type(2) {
+  top: 0.95rem;
+}
+
+.calendarify-popout .day .tag:nth-of-type(3) {
+  top: 1.25rem;
+}
+
+/* Don't display more than 3 pips */
+.calendarify-popout .day .tag:nth-of-type(n+4) {
+  display: none;
+}
+
+.calendarify-popout .bottom {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.5rem;
+}
+
+.calendarify-popout .bottom a,
+.calendarify-popout .bottom span {
+  margin-right: 0.5rem;
+  color: var(--calendarify-color-dark);
+  transition: color 0.2s ease-in-out;
+}
+
+.calendarify-popout .bottom a:hover {
+  color: var(--calendarify-color-primary);
+}
+
+.calendarify-popout .legend-item {     
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.calendarify-popout .legend-item .legend-tag {     
+  margin-right: 0.2rem;
+}
+
+.calendarify-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.calendarify-display-none {
+  display: none;
+}
