@@ -1,6 +1,6 @@
 # calendarify
 
-A client-side calendar library designed to work as a drop-in replacement for `<input type="date">`, which I dislike.
+A client-side calendar library designed to work as a drop-in replacement for `<input type="date">`, which I dislike. Calendarify uses [moment](https://momentjs.com/) internally and respects localisation settings. The display is rendered using pure CSS.
 
 ## What does it look like?
 
@@ -47,6 +47,24 @@ A default `date` can be provided, either as the `value` of the `input` element o
 ```
 
 See the [examples/](examples) directory for more information.
+
+## Usage with Verj.io
+
+This library is compatible with [Verj.io](https://verj.io/). To use calendarify, import [moment](https://momentjs.com/), the JavaScript and the CSS files as web resources on your form. Then, create a `Date` field and specify `Text` as the display type. Drag the field onto your page as a control then add an `id` using `HTMLElementProperties`. To call the instantiation, add a custom jQuery event handler to the `$.ready` event of the root entity in your outline - it will have the same name as your page. You'll have to give this entity an `id` too.
+
+```js
+// Set the current locale
+// (Optional)
+moment.locale('en-gb');
+
+// Initialise the datepicker
+calendarify('#input-selector', {
+	tags: [
+		{ color: 'blue', label: 'Christmas', dates: ['25/12/2019'] },
+		{ color: 'green', label: 'Bank Holidays', dates: ['25/12/2019', '26/12/2019', '01/01/2020'] }
+	]
+})
+```
 
 ## License
 
