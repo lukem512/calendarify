@@ -4,7 +4,7 @@ A client-side calendar library designed to work as a drop-in replacement for `<i
 
 ## Usage
 
-Simply include the JavaScript and CSS files, then instantiate the calendarified datepickers by calling `calendarify('#input-selector', opts)`. Oh, and you'll need [https://momentjs.com/](moment) too.
+Simply include the JavaScript and CSS files, then instantiate the calendarified datepickers by calling `calendarify('#input-selector', opts)`. Oh, and you'll need (https://momentjs.com/)[moment] too.
 
 ```html
 <html>
@@ -42,7 +42,7 @@ A default `date` can be provided, either as the `value` of the `input` element o
   }
 ```
 
-See the examples directory for more information.
+See the [examples/](examples) directory for more information.
 
 ## License
 
