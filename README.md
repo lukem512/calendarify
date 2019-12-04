@@ -2,6 +2,10 @@
 
 A client-side calendar library designed to work as a drop-in replacement for `<input type="date">`, which I dislike.
 
+## What does it look like?
+
+![calendarify in action](https://i.imgur.com/nn28Cz0.png)
+
 ## Usage
 
 Simply include the JavaScript and CSS files, then instantiate the calendarified datepickers by calling `calendarify('#input-selector', opts)`. Oh, and you'll need [moment](https://momentjs.com/) too.
