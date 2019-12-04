@@ -25,7 +25,7 @@ Simply include the JavaScript and CSS files, then instantiate the calendarified 
   </head>
   <body>
     <!-- Create an input -->
-    <input id="input-selector" Placeholder="Pick a date!"></input>
+    <input id="input-selector" placeholder="Pick a date!"></input>
     
     <!-- Call the instantiation -->
     <script>
