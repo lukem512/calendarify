@@ -379,6 +379,12 @@ function calendarify(selector, opts = {}) {
     date,
     tags
   }
+
+  // Create a positioned container and
+	// append the input and the calendar
+	let containerEl = document.createElement('span')
+  containerEl.style.position = 'relative'
+  el.parentNode.appendChild(containerEl)
   
   // Add the icon to the input element
   let iconEl = document.createElement('a')
@@ -516,6 +522,11 @@ function calendarify(selector, opts = {}) {
   // elements, to be children of the new container
   inputContainerEl.appendChild(el)
   inputContainerEl.appendChild(iconContainerEl)
+
+  // Add the input container and the calendar container to the
+	// overall, positioned container
+	containerEl.appendChild(inputContainerEl)
+  containerEl.appendChild(calendarContainerEl)
   
   // Populate the calendar with data
   updateCalendar(calendarId)
