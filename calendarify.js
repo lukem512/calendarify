@@ -15,11 +15,24 @@ function handleOpenCalendarClick(e) {
   let calendarInfo = document.calendarify.calendars[calendarId]
   let calendarEl = document.getElementById(calendarId)
   let inputEl = document.getElementById(calendarInfo.inputId)
-  let rect = inputEl.getBoundingClientRect()
-  calendarEl.style.left = rect.x + rect.width + 10 + 'px'
-  calendarEl.style.top = rect.y + 'px'
+
+  // Get the input container
+  let rect = inputEl.parentNode.getBoundingClientRect()
+
+  // Find a positioned ancestor
+  let positionedEl = getPositionedAncestor(inputEl)
+  let boundingRect = positionedEl ? positionedEl.getBoundingClientRect() : new rect(0, 0, 0, 0)
+
   // TODO: add some logic to prevent the calendar appearing off-screen
   // i.e. move to bottom, top, left, right
+
+  // Placement: right
+  calendarEl.style.left = (rect.left - boundingRect.left) + rect.width + 10 + 'px'
+  calendarEl.style.top = (rect.top - boundingRect.top) + 'px'
+  calendarEl.style.marginBottom = '1rem'
+  calendarEl.style.marginRight = '1rem'
+
+  // Show the calendar!
   calendarEl.classList.remove('calendarify-display-none')
 }
 
@@ -232,7 +245,7 @@ function makeLegendId(inputId) {
 }
 
 // Transform tags into a list of tags per date
-function makeTagsByDate(tags) {
+function makeTagsByDate(tags = []) {
   return tags.reduce((obj, tag) => {
     let tagDates = tag.dates || []
     tagDates.forEach(tagDate => {
@@ -252,6 +265,29 @@ function getTagDetails(tag) {
     color: tag.color,
     label: tag.label
   }
+}
+
+// Finds the closest ancestor to the element
+// with a definite position
+function getPositionedAncestor(el) {
+  // The element has no parents, bail out
+  if (!el) {
+    return null
+  }
+
+  // Are we at the top?
+  if (el.nodeName.toUpperCase() === 'HTML') {
+    return el
+  }
+
+  // Test for a positioned value
+  const positionedValues = ['sticky', 'absolute', 'relative', 'fixed']
+  if (positionedValues.includes(el.style.position).valueOf()) {
+    return el
+  }
+
+  // Not positioned, recurse
+  return getPositionedAncestor(el.parentNode)
 }
 
 // Run once
@@ -347,7 +383,6 @@ function calendarify(selector, opts = {}) {
   // Add the icon to the input element
   let iconEl = document.createElement('a')
   iconEl.classList.add('show-calendar-icon')
-  iconEl.setAttribute('href', '#')
   iconEl.setAttribute('data-calendar', calendarId)
   iconEl.innerHTML = '⮞'
   iconEl.addEventListener('click', handleOpenCalendarClick)
@@ -378,7 +413,6 @@ function calendarify(selector, opts = {}) {
   
   let calendarTopMonthPrevIconEl = document.createElement('a')
   calendarTopMonthPrevIconEl.classList.add('icon')
-  calendarTopMonthPrevIconEl.setAttribute('href', '#')
   calendarTopMonthPrevIconEl.innerHTML = '⮜'
   calendarTopMonthPrevIconEl.addEventListener('click', handlePrevMonthClick)
   
@@ -390,7 +424,6 @@ function calendarify(selector, opts = {}) {
   
   let calendarTopYearNextIconEl = document.createElement('a')
   calendarTopYearNextIconEl.classList.add('icon')
-  calendarTopYearNextIconEl.setAttribute('href', '#')
   calendarTopYearNextIconEl.innerHTML = '⮞'
   calendarTopYearNextIconEl.addEventListener('click', handleNextMonthClick)
   
@@ -436,7 +469,6 @@ function calendarify(selector, opts = {}) {
   
   // Add hyperlink controls to bottom
   let bottomTodayLinkEl = document.createElement('a')
-  bottomTodayLinkEl.setAttribute('href', '#')
   bottomTodayLinkEl.innerHTML = 'Select today\'s date'
   
   let bottomEl = document.createElement('div')

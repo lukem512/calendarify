@@ -21,6 +21,10 @@
   font-family: var(--calendarify-font-family);
 }
 
+.calendarify a {
+  cursor: pointer;
+}
+
 .calendarify.input-group input.invalid {
   color: var(--calendarify-color-danger);
 }
@@ -57,7 +61,6 @@
 
 .calendarify-popout {
   background-color: var(--calendarify-color-background);
-  margin-left: 1rem;
   position: absolute;
   box-shadow: var(--calendarify-box-shadow);
   z-index: 999;
