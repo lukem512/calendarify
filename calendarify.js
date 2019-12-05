@@ -449,7 +449,8 @@ function calendarify(selector, opts = {}) {
   let calendarHeadingsEl = document.createElement('div')
   calendarHeadingsEl.classList.add('calendarify-row', 'headings')
   
-  const weekdays = moment.weekdaysShort()
+  // Get the (locale-specific) weekdays
+  const weekdays = moment.weekdaysShort(true)
   for (let i = 0; i < CALENDARIFY_DAYS; i++) {
     let headingEl = document.createElement('div')
     headingEl.classList.add('heading')
