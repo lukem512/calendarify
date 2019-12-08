@@ -1,6 +1,6 @@
-/* 
+/*
  * Calendarify
- * Client-side calendar library designed to replace the 
+ * Client-side calendar library designed to replace the
  * <input type="date"> tag, which is lacking.
  * Luke Mitchell, Dec. 2019
  */
@@ -12,7 +12,7 @@
   --calendarify-color-neutral: lightgrey;
   --calendarify-color-danger: red;
   --calendarify-color-background: #f7f7f7;
-  
+
   --calendarify-font-family: arial, sans-serif;
   --calendarify-box-shadow: 0.2rem 0.2rem 0 0 var(--calendarify-color-neutral);
 }
@@ -25,20 +25,20 @@
   cursor: pointer;
 }
 
-.calendarify.input-group input.invalid {
+.calendarify.calendarify-input-group input.invalid {
   color: var(--calendarify-color-danger);
 }
 
-.calendarify.input-group {
+.calendarify.calendarify-input-group {
   position: relative;
   width: fit-content;
 }
 
-.calendarify.input-group input {
+.calendarify.calendarify-input-group input {
   width: 100%;
 }
 
-.calendarify.input-group .input-icon {
+.calendarify.calendarify-input-group .input-icon {
   position: absolute;
   height: 1rem;
   font-size: 0.8rem;
@@ -47,7 +47,7 @@
   z-index: 5;
 }
 
-.calendarify.input-group .input-icon a {
+.calendarify.calendarify-input-group .input-icon a {
   color: var(--calendarify-color-dark);
   text-decoration: none;
   outline: none;
@@ -55,8 +55,16 @@
   cursor: pointer;
 }
 
-.calendarify.input-group .input-icon a:hover {
+.calendarify.calendarify-input-group .input-icon a:hover {
   color: var(--calendarify-color-primary);
+  fill: var(--calendarify-color-primary);
+}
+
+.calendarify.calendarify-input-group .input-icon svg {
+  /* input height is 1rem */
+  padding-top: 0.2rem;
+  height: 0.8rem;
+  width: 0.8rem;
 }
 
 .calendarify-popout {
@@ -64,7 +72,7 @@
   position: absolute;
   box-shadow: var(--calendarify-box-shadow);
   z-index: 999;
-  
+
   /* position to be populated by JavaScript */
 }
 
@@ -72,11 +80,11 @@
   padding: 0.5rem;
   font-size: 0.9rem;
   justify-content: space-between;
-  
+
   background-color: var(--calendarify-color-primary);
-  
+
   box-sizing: border-box;
-  
+
   font-weight: bold;
 }
 
@@ -106,11 +114,13 @@
 .calendarify-popout .top .month-container a,
 .calendarify-popout .top .year-container a {
   font-size: 0.7rem;
+  width: 0.7rem;
 }
 
 .calendarify-popout .top .month-container a:hover,
 .calendarify-popout .top .year-container a:hover {
   color: var(--calendarify-color-light);
+  fill: var(--calendarify-color-light);
 }
 
 .calendarify-popout .top .month {
@@ -135,18 +145,18 @@
 
   width: 100%;
   min-height: 2rem;
-  
+
   box-sizing: border-box;
-  
+
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   font-weight: bold;
   font-size: 0.9rem;
-  
+
   position: relative;
-  
+
   transition: color 0.2s ease-in-out;
 }
 
@@ -211,6 +221,10 @@
   font-size: 0.5rem;
 }
 
+.calendarify-popout .bottom a {
+  text-decoration: underline;
+}
+
 .calendarify-popout .bottom a,
 .calendarify-popout .bottom span {
   margin-right: 0.5rem;
@@ -222,12 +236,12 @@
   color: var(--calendarify-color-primary);
 }
 
-.calendarify-popout .legend-item {     
+.calendarify-popout .legend-item {
   align-items: center;
   margin-right: 0.5rem;
 }
 
-.calendarify-popout .legend-item .legend-tag {     
+.calendarify-popout .legend-item .legend-tag {
   margin-right: 0.2rem;
 }
 

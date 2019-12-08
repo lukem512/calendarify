@@ -13,12 +13,9 @@ Simply include the JavaScript and CSS files, then instantiate the calendarified 
 ```html
 <html>
   <head>
-    <!-- You'll need this for the arrow characters -->
-    <meta charset="UTF-8">
-    
     <!-- Calendarify uses moment for date manipulation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    
+
     <!-- Then include the styles and the script! -->
     <link href="calendarify.css" rel="stylesheet">
     <script src="calendarify.js"></script>
@@ -26,7 +23,7 @@ Simply include the JavaScript and CSS files, then instantiate the calendarified 
   <body>
     <!-- Create an input -->
     <input id="input-selector" placeholder="Pick a date!"></input>
-    
+
     <!-- Call the instantiation -->
     <script>
       calendarify('#input-selector');
