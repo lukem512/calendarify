@@ -5,15 +5,16 @@
 
 // Constants, for ease of use
 const CALENDARIFY_DAYS = 7
+const CALENDARIFY_MONTHS = 12
 const CALENDARIFY_ROWS = 6
+const CALENDARIFY_MONTH_ROWS = 4
+const CALENDARIFY_MONTHS_PER_ROW = CALENDARIFY_MONTHS / CALENDARIFY_MONTH_ROWS
 
 const CALENDARIFY_TAG_DATE_FORMAT = 'DD/MM/YYYY'
 
 // Event handler to open calendar popout
 function handleOpenCalendarClick(e) {
   let calendarInfo = findCalendarInfoFromElem(e.target)
-  //let calendarId = e.target.getAttribute('data-calendar')
-  //let calendarInfo = document.calendarify.calendars[calendarId]
   let calendarEl = document.getElementById(calendarInfo.calendarId)
   let inputEl = document.getElementById(calendarInfo.inputId)
 
@@ -85,23 +86,24 @@ function handleCalendarDayClick(e) {
 
   // And fire the onChange event for the input!
   inputEl.dispatchEvent(new Event('change', { 'bubbles': true }))
+}
 
-  /*
-  // Add it to the calendar object
-  calendarInfo.date = newDate
+// Event handler to open month selector
+function handleToggleMonthSelecionClick(e) {
+  let calendarInfo = findCalendarInfoFromElem(e.target)
+  toggleView(calendarInfo.inputId)
+}
 
-  // And [clone it for] the selectedDate
-  // See handleInputChange
-  calendarInfo.selectedDate = moment(newDate)
-
-  // Update the input element
-  inputEl.value = newDate.format(getDateFormat())
-  inputEl.classList.remove('invalid')
-
-  // And the calendar, which is now hidden
-  calendarEl.classList.add('calendarify-display-none')
-  updateCalendar(calendarId)
-  */
+function handleCalendarMonthClick(e) {  
+  // Set the month to the one clicked
+  let calendarInfo = findCalendarInfoFromElem(e.target)
+  calendarInfo.date.month(e.target.innerHTML)
+  
+  // Update the calendar
+  updateCalendar(calendarInfo.calendarId)
+  
+  // Resume usual selection
+  switchToDayView(calendarInfo.inputId)
 }
 
 // Event handler to change calendar to the
@@ -137,6 +139,9 @@ function handleTodayClick(e) {
   // Update the input element
   inputEl.value = moment().format(getDateFormat())
   inputEl.classList.remove('invalid')
+  
+  // Resume usual selection
+  switchToDayView(inputId)
 
   // Hide and update the calendar
   calendarEl.classList.add('calendarify-display-none')
@@ -249,6 +254,18 @@ function makeLegendId(inputId) {
   return `${inputId}-legend`
 }
 
+// Construct the ID for the days container element
+// This is shown during normal (day) calendar operation
+function makeDaysContainerId(inputId) {
+  return `${inputId}-days-selection`
+}
+
+// Construct the ID for the months container element
+// This is shown during month selection
+function makeMonthsContainerId(inputId) {
+  return `${inputId}-months-selection`
+}
+
 // Construct an SVG string,
 // with optional rotation (in degrees)
 function makeArrowIcon(rotation) {
@@ -308,6 +325,30 @@ function getPositionedAncestor(el) {
   return getPositionedAncestor(el.parentNode)
 }
 
+// Display the day selection view on the calendar
+function switchToDayView(inputId) {
+  let daysContainer = document.getElementById(makeDaysContainerId(inputId))
+  let monthsContainer = document.getElementById(makeMonthsContainerId(inputId))
+  monthsContainer.classList.add('calendarify-display-none')
+  daysContainer.classList.remove('calendarify-display-none')
+}
+
+// Display the month selection view on the calendar
+function switchToMonthView(inputId) {
+  let daysContainer = document.getElementById(makeDaysContainerId(inputId))
+  let monthsContainer = document.getElementById(makeMonthsContainerId(inputId))
+  daysContainer.classList.add('calendarify-display-none')
+  monthsContainer.classList.remove('calendarify-display-none')
+}
+
+// Toggles between month and day selection views on the calendar
+function toggleView(inputId) {
+  let daysContainer = document.getElementById(makeDaysContainerId(inputId))
+  let monthsContainer = document.getElementById(makeMonthsContainerId(inputId))
+  daysContainer.classList.toggle('calendarify-display-none')
+  monthsContainer.classList.toggle('calendarify-display-none')
+}
+
 // Run once
 function initialSetUp() {
   if (!document.calendarify) {
@@ -336,13 +377,17 @@ function initialSetUp() {
       // close them all
       let { calendars } = document.calendarify
       Object.keys(calendars).forEach(calendarId => {
+        switchToDayView(document.calendarify.calendars[calendarId].inputId)
         document.getElementById(calendarId).classList.add('calendarify-display-none')
       })
     })
 
     // Close all calendars on window resize
     window.addEventListener('resize', e => {
-      document.querySelectorAll('.calendarify.calendarify-popout').forEach(el => el.classList.add('calendarify-display-none'))
+      document.querySelectorAll('.calendarify.calendarify-popout').forEach(el => {
+        switchToDayView(document.calendarify.calendars[el.id].inputId)
+        el.classList.add('calendarify-display-none')
+      })
     })
   }
 }
@@ -431,6 +476,7 @@ function calendarify(selector, opts = {}) {
   // Build up the calendar content
   let calendarTopMonthEl = document.createElement('div')
   calendarTopMonthEl.classList.add('month')
+  calendarTopMonthEl.addEventListener('click', handleToggleMonthSelecionClick)
 
   let calendarTopMonthContainerEl = document.createElement('div')
   calendarTopMonthContainerEl.classList.add('month-container')
@@ -463,7 +509,13 @@ function calendarify(selector, opts = {}) {
   calendarTopEl.appendChild(calendarTopYearContainerEl)
 
   calendarContainerEl.appendChild(calendarTopEl)
+  
+  // Add a container for the calendar, in day view
+  let calendarDaysContainerEl = document.createElement('div')
+  calendarDaysContainerEl.classList.add('calendarify-container-days')
+  calendarDaysContainerEl.id = makeDaysContainerId(el.id)
 
+  // Now create the headings, and the days themselves
   let calendarHeadingsEl = document.createElement('div')
   calendarHeadingsEl.classList.add('calendarify-row', 'headings')
 
@@ -476,7 +528,7 @@ function calendarify(selector, opts = {}) {
     calendarHeadingsEl.appendChild(headingEl)
   }
 
-  calendarContainerEl.appendChild(calendarHeadingsEl)
+  calendarDaysContainerEl.appendChild(calendarHeadingsEl)
 
   // Create the rows
   for (let i = 0; i < CALENDARIFY_ROWS; i++) {
@@ -489,7 +541,7 @@ function calendarify(selector, opts = {}) {
       dayEl.classList.add('day')
       rowEl.appendChild(dayEl)
     }
-    calendarContainerEl.appendChild(rowEl)
+    calendarDaysContainerEl.appendChild(rowEl)
   }
 
   // Add hyperlink controls to bottom
@@ -534,8 +586,35 @@ function calendarify(selector, opts = {}) {
     // Add the legend id to the document object
     document.calendarify.calendars[calendarId].legendEl = legendEl.id
   }
-
-  calendarContainerEl.appendChild(bottomEl)
+  
+  // Add the legend/bottom row
+  calendarDaysContainerEl.appendChild(bottomEl)
+  
+  // Add the days container to the calendar element
+  calendarContainerEl.appendChild(calendarDaysContainerEl)
+  
+  // Create a container for the months view
+  let calendarMonthsContainerEl = document.createElement('div')
+  calendarMonthsContainerEl.classList.add('calendarify-container-months', 'calendarify-display-none')
+  calendarMonthsContainerEl.id = makeMonthsContainerId(el.id)
+  
+  // Get the (locale-specific) months
+  const months = moment.monthsShort(true)
+  for (let i = 0; i < CALENDARIFY_MONTH_ROWS; i++) {
+    let calendarMonthRow = document.createElement('div')
+    calendarMonthRow.classList.add('calendarify-row')
+    for (let j = 0; j < CALENDARIFY_MONTHS_PER_ROW; j++) {
+      let monthEl = document.createElement('div')
+      monthEl.classList.add('month')
+      monthEl.innerHTML = months[i*CALENDARIFY_MONTHS_PER_ROW + j]
+      monthEl.addEventListener('click', handleCalendarMonthClick)
+      calendarMonthRow.appendChild(monthEl)
+    }
+    calendarMonthsContainerEl.appendChild(calendarMonthRow)
+  }
+  
+  // Add the months container to the calendar element
+  calendarContainerEl.appendChild(calendarMonthsContainerEl)
 
   // Move the original input element, as well as the icon
   // elements, to be children of the new container

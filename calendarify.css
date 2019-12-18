@@ -72,6 +72,7 @@
   position: absolute;
   box-shadow: var(--calendarify-box-shadow);
   z-index: 999;
+  min-width: 305px;
 
   /* position to be populated by JavaScript */
 }
@@ -86,6 +87,8 @@
   box-sizing: border-box;
 
   font-weight: bold;
+  
+  margin-bottom: 0.5rem;
 }
 
 .calendarify-popout .top .month-container,
@@ -101,6 +104,10 @@
   outline: none;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
+}
+
+.calendarify-popout .top .month:hover {
+  color: var(--calendarify-color-light);
 }
 
 .calendarify-popout .top .month-container div {
@@ -139,7 +146,8 @@
   padding: 0.25rem 0.5rem;
 }
 
-.calendarify-popout .day {
+.calendarify-popout .day,
+.calendarify-popout .month {
   padding: 0.5rem;
   cursor: pointer;
 
@@ -160,20 +168,24 @@
   transition: color 0.2s ease-in-out;
 }
 
-.calendarify-popout .day:not(.selected):hover {
+.calendarify-popout .day:not(.selected):hover,
+.calendarify-popout .month:not(.selected):hover {
   background-color: var(--calendarify-color-primary);
 }
 
-.calendarify-popout .day.today {
+.calendarify-popout .day.today,
+.calendarify-popout .month.today {
   color: var(--calendarify-color-primary);
 }
 
-.calendarify-popout .day.selected {
+.calendarify-popout .day.selected,
+.calendarify-popout .month.selected {
   border: 2px solid var(--calendarify-color-primary);
   padding: calc(0.5rem - 2px);
 }
 
-.calendarify-popout .day.selected:hover {
+.calendarify-popout .day.selected:hover,
+.calendarify-popout .month.selected:hover {
   color: var(--calendarify-color-dark);
 }
 
